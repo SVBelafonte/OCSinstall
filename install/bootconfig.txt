@@ -1,0 +1,15 @@
+disable_overscan=1
+hdmi_force_hotplug=1
+hdmi_group=1
+hdmi_mode=4
+hdmi_drive=2
+gpu_mem=128
+disable_splash=1
+dtoverlay=w1-gpio
+dtparam=i2c_arm=on
+max_usb_current=1
+
+# from old/existing file
+# Enable audio (loads snd_bcm2835)
+#dtparam=audio=on
+
