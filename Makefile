@@ -44,216 +44,188 @@ prep:
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|      Setup dirs      +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#mkdir -p $(HOME)apps $(HOME)camera $(HOME)documents $(HOME)databases $(HOME).config
-	#working
+	mkdir -p $(HOME)apps $(HOME)camera $(HOME)documents $(HOME)databases $(HOME).config
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|      Add groups      +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio,pi $(USER)
-	#working
+	sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio,pi $(USER)
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|     Install rxvt     +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install rxvt-unicode -y
-	#cp $(OCS)/.Xresources $(HOME)
-	#sed -i -e "s,laserwolf,$(USER),g" $(HOME).Xresources
-	#working
+	sudo apt-get install rxvt-unicode -y
+	cp $(OCS)/.Xresources $(HOME)
+	sed -i -e "s,laserwolf,$(USER),g" $(HOME).Xresources
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|   Install Florence   +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#cp $(OCS).florence.conf $(HOME)
-	#sudo apt-get install florence -y
+	cp $(OCS).florence.conf $(HOME)
+	sudo apt-get install florence -y
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)| OnboardComputerSystem+$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#git clone https://github.com/LASER-WOLF/OnboardComputerSystem
-	#cp -r $(OCS).OnboardComputerSystem .
-	#cp $(OCS).bash_aliases .
-	#working
+	git clone https://github.com/LASER-WOLF/OnboardComputerSystem
+	cp -r $(OCS).OnboardComputerSystem .
+	cp $(OCS).bash_aliases .
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|     Setup JTides     +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install oracle-java8-jdk -y
-	#cp -r $(OCS)Apps/JTides apps
-	#working
+	sudo apt-get install oracle-java8-jdk -y
+	cp -r $(OCS)Apps/JTides apps
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|  Moving OCS Scripts  +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#cp -r $(OCS)Scripts/* scripts
-	#working
+	cp -r $(OCS)Scripts/* scripts
 	#revisit and replace laserwolfs
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|        Get vim       +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install vim -y
-	#working
+	sudo apt-get install vim -y
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|        Get htop      +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install htop -y
-	#working
+	sudo apt-get install htop -y
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|      Get python      +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install python python-dev python-smbus python-pip -y
-	#sudo pip install ephem
-	#working
+	sudo apt-get install python python-dev python-smbus python-pip -y
+	sudo pip install ephem
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|      Get sqlite3     +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install sqlite3 -y
-	#working
+	sudo apt-get install sqlite3 -y
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|      Get tint2       +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#cp -r $(OCS).config/tint2/ .config/
-	#sudo apt-get install tint2 -y
-	#working
+	cp -r $(OCS).config/tint2/ .config/
+	sudo apt-get install tint2 -y
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|     Get lemonbar     +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install libxcb-xinerama0-dev libxcb-randr0-dev libxft-dev libx11-xcb-dev -y
-	#git clone https://github.com/krypt-n/bar
-	#cd bar && sudo make install
-	#cd
-	#sudo rm -rf ~/bar/
-	#working
+	sudo apt-get install libxcb-xinerama0-dev libxcb-randr0-dev libxft-dev libx11-xcb-dev -y
+	git clone https://github.com/krypt-n/bar
+	cd bar && sudo make install
+	cd
+	sudo rm -rf ~/bar/
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|       Get conky      +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install conky -y
-	#cp OnboardComputerSystem/.conkyrc $(HOME)
-	#sed -i -e "s,laserwolf,$(USER),g" $(HOME).conkyrc
-	#touch .conkytext
-	#working
+	sudo apt-get install conky -y
+	cp OnboardComputerSystem/.conkyrc $(HOME)
+	sed -i -e "s,laserwolf,$(USER),g" $(HOME).conkyrc
+	touch $(HOME).conkytext
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|    Install Themes    +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#cp -r $(OCS).fonts .fonts
-	#cp -r $(OCS).themes .themes
-	#cp -r $(OCS).icons .icons
-	#cp $(OCS).gtkrc-2.0 .gtkrc-2.0
-	#cp -r $(OCS).config/gtk-3.0 .config/gtk-3.0
-	#working
+	cp -r $(OCS).fonts .fonts
+	cp -r $(OCS).themes .themes
+	cp -r $(OCS).icons .icons
+	cp $(OCS).gtkrc-2.0 .gtkrc-2.0
+	cp -r $(OCS).config/gtk-3.0 .config/gtk-3.0
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|      Setup I2C       +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install i2c-tools -y
-	#sudo sh -c "echo 'i2c-bcm2708' >> /etc/modules"
-	#sudo sh -c "echo 'i2c-dev' >> /etc/modules"
-	#working
+	sudo apt-get install i2c-tools -y
+	sudo sh -c "echo 'i2c-bcm2708' >> /etc/modules"
+	sudo sh -c "echo 'i2c-dev' >> /etc/modules"
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|       Setup LCD      +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo pip install RPi.GPIO
-	#git clone https://github.com/adafruit/Adafruit_Python_CharLCD.git
-	#cd Adafruit_Python_CharLCD && sudo python setup.py install
-	#cd
-	#sudo rm -rf ~/Adafruit_Python_CharLCD/
-	#working
+	sudo pip install RPi.GPIO
+	git clone https://github.com/adafruit/Adafruit_Python_CharLCD.git
+	cd Adafruit_Python_CharLCD && sudo python setup.py install
+	cd
+	sudo rm -rf ~/Adafruit_Python_CharLCD/
 	#crontab ???
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|    Setup Barometer   +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#git clone https://github.com/adafruit/Adafruit_Python_BMP.git
-	#cd Adafruit_Python_BMP && sudo python setup.py install
-	#cd
-	#sudo rm -rf ~/Adafruit_Python_BMP/
-	#working
+	git clone https://github.com/adafruit/Adafruit_Python_BMP.git
+	cd Adafruit_Python_BMP && sudo python setup.py install
+	cd
+	sudo rm -rf ~/Adafruit_Python_BMP/
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|     Syncing NTP      +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo sed -i -e "s,=ntp,=root,g" /etc/init.d/ntp
-	#sudo sed -i -e "/server 3/aserver 127.127.28.0\nfudge 127.127.28.0 refid GPS\nserver 127.127.28.1 prefer\nfudge 127.127.28.1 refid PPS" /etc/ntp.conf
-	#working
+	sudo sed -i -e "s,=ntp,=root,g" /etc/init.d/ntp
+	sudo sed -i -e "/server 3/aserver 127.127.28.0\nfudge 127.127.28.0 refid GPS\nserver 127.127.28.1 prefer\nfudge 127.127.28.1 refid PPS" /etc/ntp.conf
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|    Install kplex     +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#git clone https://github.com/stripydog/kplex
-	#cd kplex && make && sudo make install
-	#cd
-	#rm -rf kplex/
-	#working
+	git clone https://github.com/stripydog/kplex
+	cd kplex && make && sudo make install
+	cd
+	rm -rf kplex/
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|     Get Unclutter    +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install unclutter -y
-	#working
+	sudo apt-get install unclutter -y
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|    Install scrot     +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install scrot -y
-	#working
+	sudo apt-get install scrot -y
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|     Get fswebcam     +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install fswebcam -y
-	#working
+	sudo apt-get install fswebcam -y
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|    Install Ranger    +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install ranger -y
-	#working
+	sudo apt-get install ranger -y
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|      Get PCmanFM     +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#mkdir -p $(HOME).config/pcmanfm/default/
-	#cp $(OCS).config/pcmanfm/default/pcmanfm.conf $(HOME).config/pcmanfm/default/pcmanfm.conf
-	#cp -r $(OCS).config/libfm/ $(HOME).config/libfm/
-	#sudo apt-get install pcmanfm -y
-	#working
+	mkdir -p $(HOME).config/pcmanfm/default/
+	cp $(OCS).config/pcmanfm/default/pcmanfm.conf $(HOME).config/pcmanfm/default/pcmanfm.conf
+	cp -r $(OCS).config/libfm/ $(HOME).config/libfm/
+	sudo apt-get install pcmanfm -y
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|     Install slurm    +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install slurm -y
-	#working
+	sudo apt-get install slurm -y
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|     Get Epiphany     +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install epiphany-browser -y
-	#working
+	sudo apt-get install epiphany-browser -y
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|      Install VNC     +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#sudo apt-get install x11vnc -y
-	#use the vnc script to start the server
-	#working
+	sudo apt-get install x11vnc -y
+	use the vnc script to start the server
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|      Get Okular      +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	mkdir -p $(HOME).kde/share/config
-	#cp $(OCS).kde/share/config/okularrc $(HOME).kde/share/config/okularrc
-	#cp $(OCS).kde/share/config/okularpartrc $(HOME).kde/share/config/okularpartrc
-	#sudo apt-get install okular -y
-	#working
+	cp $(OCS).kde/share/config/okularrc $(HOME).kde/share/config/okularrc
+	cp $(OCS).kde/share/config/okularpartrc $(HOME).kde/share/config/okularpartrc
+	sudo apt-get install okular -y
 	echo -e "" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|        Reboot        +$(NO)" ;\
@@ -265,17 +237,17 @@ opencpn:
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|   Install OpenCPN    +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#mkdir -p charts > /dev/null ;\
-	#cp -r $(OCS).opencpn $(HOME) > /dev/null ;\
-	#sed -i -e "s,laserwolf,$(USER),g" $(HOME).opencpn/plugins/watchdog/WatchdogConfiguration.xml > /dev/null ;\
-	#sudo apt-get install build-essential cmake gettext git-core gpsd gpsd-clients libgps-dev wx-common libwxgtk3.0-dev libglu1-mesa-dev libgtk2.0-dev wx3.0-headers libbz2-dev libtinyxml-dev libportaudio2 portaudio19-dev libcurl4-openssl-dev libexpat1-dev libcairo2-dev -y > /dev/null ;\
-	#git clone git://github.com/OpenCPN/OpenCPN.git > /dev/null ;\
+	mkdir -p charts > /dev/null ;\
+	cp -r $(OCS).opencpn $(HOME) > /dev/null ;\
+	sed -i -e "s,laserwolf,$(USER),g" $(HOME).opencpn/plugins/watchdog/WatchdogConfiguration.xml > /dev/null ;\
+	sudo apt-get install build-essential cmake gettext git-core gpsd gpsd-clients libgps-dev wx-common libwxgtk3.0-dev libglu1-mesa-dev libgtk2.0-dev wx3.0-headers libbz2-dev libtinyxml-dev libportaudio2 portaudio19-dev libcurl4-openssl-dev libexpat1-dev libcairo2-dev -y > /dev/null ;\
+	git clone git://github.com/OpenCPN/OpenCPN.git > /dev/null ;\
 	echo -e "$(WARN)| This Takes 1-2 Hours +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	#cd OpenCPN && mkdir build && cd build && cmake ../ && make && sudo make install > /dev/null ;\
-	#cd > /dev/null ;\
-	#rm -rf ~/OpenCPN/ > /dev/null ;\
-	#working
+	cd OpenCPN && mkdir build && cd build && cmake ../ && make && sudo make install > /dev/null ;\
+	cd > /dev/null ;\
+	rm -rf ~/OpenCPN/ > /dev/null ;\
+	working
 	if [ $$? = 0 ] ; then \
 	echo -e "$(WARN)|         $(OK)OK!          $(WARN)+$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
@@ -390,7 +362,7 @@ gpsd:
 	echo -e "$(WARN)+=================+$(NO)" ;\
 	echo -e "$(WARN)|      $(ERROR)ERROR!     $(WARN)+$(NO)" ;\
 	echo -e "$(WARN)+=================+$(NO)" ;\
-	  exit 0;\
+	exit 0;\
 	fi ;\
 	echo "" ;\
 
@@ -512,17 +484,3 @@ piready:
 	echo -e "$(WARN)+===============+$(NO)" ;\
 	echo -e "" ;\
 
-steve:
-	echo -e "" ;\
-	echo -e "$(WARN)+===================+$(NO)" ;\
-	echo -e "$(WARN)| Installing zyGrib +$(NO)" ;\
-	echo -e "$(WARN)+===================+$(NO)" ;\
-	if [ $$? = 0 ] ; then \
-	echo -e "$(WARN)|        $(OK)OK!        $(WARN)+$(NO)" ;\
-	echo -e "$(WARN)+===================+$(NO)" ;\
-	else \
-	echo -e "$(WARN)+===================+$(NO)" ;\
-	echo -e "$(WARN)|      $(ERROR)ERROR!       $(WARN)+$(NO)" ;\
-	echo -e "$(WARN)+===================+$(NO)" ;\
-	exit 0;\
-	fi ;\
