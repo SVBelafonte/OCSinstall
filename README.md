@@ -22,7 +22,6 @@ OCSinstall automates the Onboard Computer System installation.
 6. **git clone https://github.com/steveshannon/OCSinstall**
 7. mv OCSinstall/* .
 8. **ls -la**
-
 you should see:
 ```sh
 $ ls -la

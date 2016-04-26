@@ -1,33 +1,43 @@
-#===============+
-# OCS Installer |
-#===============+
-
-.PHONY  :   all prep display opencpn gpsd pisnes piready
-
-usage   :
-	clear
-	@echo "+=================================+"
-	@echo "| OnboardComputerSystem Installer |"
-	@echo "+=================================+"
-	@echo ""
-	@echo "usage: make [ piready | ocs ] "
-	@echo "   or: make [ prep | display | opencpn | gpsd | pisnes ] for specific parts"
-
-#===============+
-#    Strings    |
-#===============+
-
-USER=capn
-HOME=/home/$(USER)/
-INSTALL=/home/$(USER)/install/
-OCS=~/OnboardComputerSystem/
-
-#===============+
-#    Recipes    |
-#===============+
-
-ocs: prep display gpsd opencpn
-	@echo "prep display gpsd opencpn"
+################################################################
+## Makefile for OCSinstall
+################################################################
+## Definitions
+################################################################
+.SILENT:
+SHELL     := /bin/bash
+.PHONY: all clean prep display opencpn gpsd pisnes piready
+################################################################
+## Name list
+################################################################
+USER     = capn
+HOME     = /home/$(USER)/
+INSTALL  = $(HOME)install/
+OCS      = $(HOME)OnboardComputerSystem/
+################################################################
+## Colordefinition
+################################################################
+NO       = \x1b[0m
+OK       = \x1b[32;01m
+WARN     = \x1b[33;01m
+ERROR    = \x1b[31;01m
+################################################################
+## make help
+################################################################
+help:
+	@echo
+	@echo -e "$(WARN)The following definitions provided by this Makefile"
+	@echo -e "$(OK)\tmake piready\t\t--\tready your pi"
+	@echo -e "\tmake prep\t\t--\tOCS prep"
+	@echo -e "\tmake display\t\t--\tOCS display"
+	@echo -e "\tmake opencpn\t\t--\tOCS OpenCPN"
+	@echo -e "\tmake gpsd\t\t--\tOCS gpsd"
+	@echo -e "\tmake zygrib\t\t--\tOCS zyGrib"
+	@echo -e "\tmake all\t\t--\tprep display gpsd zyGrib OpenCPN"
+	@echo
+################################################################
+## recipes
+################################################################
+all: prep display gpsd zygrib opencpn
 
 prep:
 	@echo "#===============+"
@@ -281,71 +291,141 @@ display:
 	@echo "#===============+"
 
 gpsd:
-	sudo apt-get install gpsd gpsd-clients -y
-	sudo cp $(OCS)gpsd /etc/default/gpsd
-	@echo "#===============+"
-	@echo "# Reboot?       |"
-	@echo "#===============+"
+	echo -e "" ;\
+    echo -e "$(WARN)+=================+$(NO)" ;\
+    echo -e "$(WARN)| Installing gpsd +$(NO)" ;\
+    echo -e "$(WARN)+=================+$(NO)" ;\
+	sudo apt-get install gpsd gpsd-clients -y > /dev/null ;\
+	sudo cp $(OCS)gpsd /etc/default/gpsd > /dev/null ;\
+	if [ $$? = 0 ] ; then \
+    echo -e "$(WARN)|       $(OK)OK!       $(WARN)+$(NO)" ;\
+    echo -e "$(WARN)+=================+$(NO)" ;\
+	else \
+    echo -e "$(WARN)|      $(ERROR)ERROR!     $(WARN)+$(NO)" ;\
+    echo -e "$(WARN)+=================+$(NO)" ;\
+	  exit 0;\
+	fi ;\
 
 zygrib:
-	@echo "#===============+"
-	@echo "# Get zyGrib    |"
-	@echo "#===============+"
-	mkdir $(HOME)GRIB
-	sudo apt-get install build-essential g++ make libqt4-dev libbz2-dev zlib1g-dev libproj-dev libnova-dev nettle-dev -y
-	tar xvzf $(OCS)zyGrib-7.0.0.tgz
-	cd zyGrib-7.0.0 && make
-#Edit Makefile:
-#vim Makefile
-#Find the line:
-#INSTALLDIR=$(HOME)/zyGrib
-#Replace it with (change laserwolf with your username):
-#INSTALLDIR=/home/laserwolf/Apps/zyGrib
-#Save the file and exit
-#sudo make install
-#cd
-#rm -rf ~/zyGrib-7.0.0/
-#mkdir -p ~/.zygrib/config/
-#cp OnboardComputerSystem/zygrib.ini .zygrib/config/zygrib.ini
-#Edit zygrib.ini:
-#vim .zygrib/config/zygrib.ini
-#Find the line:
-#gribFilePath=/home/laserwolf/GRIB
-#Replace laserwolf with your username
-#Save the file and exit
-#Press the GRIB button on the top menu to test zyGrib
+	echo -e "" ;\
+  	echo -e "$(WARN)+===================+$(NO)" ;\
+  	echo -e "$(WARN)| Installing zyGrib +$(NO)" ;\
+  	echo -e "$(WARN)+===================+$(NO)" ;\
+	mkdir -p $(HOME)GRIB > /dev/null ;\
+	sudo apt-get install build-essential g++ make libqt4-dev libbz2-dev zlib1g-dev libproj-dev libnova-dev nettle-dev -y > /dev/null ;\
+	tar xvzf $(OCS)zyGrib-7.0.0.tgz > /dev/null ;\
+	cd zyGrib-7.0.0 && make && sed -i -e 's,$$(HOME),$(HOME)apps,g' $(HOME)zyGrib-7.0.0/Makefile && sudo make install > /dev/null ;\
+    cd > /dev/null ;\
+	rm -rf $(HOME)zyGrib-7.0.0 > /dev/null ;\
+    mkdir -p $(HOME).zygrib/config/ > /dev/null ;\
+    cp $(OCS)zygrib.ini $(HOME).zygrib/config/ > /dev/null ;\
+    sed -i -e "s,laserwolf,$(USER),g" $(HOME).zygrib/config/zygrib.ini > /dev/null ;\
+	if [ $$? = 0 ] ; then \
+	  echo -e "$(WARN)Install zyGrib $(OK)[OK]$(NO)" ;\
+	else \
+	  echo -e "$(WARN)Install zyGrib $(ERROR)[ERROR]$(NO)" ;\
+	  exit 0;\
+	fi ;\
 
 pisnes:
 	sudo apt-get install libsdl1.2debian joystick -y
 	mkdir $(HOME)apps/pisnes/roms
 
 piready:
-	@echo "#===============+"
-	@echo "# Install git   |"
-	@echo "#===============+"
-	sudo apt-get install build-essential git -y
-	@echo "#===============+"
-	@echo "# Updating OS   |"
-	@echo "#===============+"
-	sudo apt-get update
-	@echo "#===============+"
-	@echo "# Upagrading OS |"
-	@echo "#===============+"
-	sudo apt-get upgrade
-	@echo "#===============+"
-	@echo "# Pi Update...  |"
-	@echo "#===============+"
-	sudo apt-get install rpi-update -y
-	@echo "#===============+"
-	@echo "# Updating Pi   |"
-	@echo "#===============+"
-	sudo rpi-update
-	@echo "#===============+"
-	@echo "# Hide Pi Logos |"
-	@echo "#===============+"
-	sudo sed -i ' 1 s/.*/& logo.nologo/' /boot/cmdline.txt
-	@echo ""
-	@echo "#===============+"
-	@echo "# Please Reboot |"
-	@echo "#===============+"
+	echo -e "" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	echo -e "$(WARN)|  Getting git  +$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	sudo apt-get install build-essential git -y > /dev/null ;\
+	if [ $$? = 0 ] ; then \
+	echo -e "$(WARN)|     $(OK)OK!       $(WARN)+$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	else \
+	echo -e "$(WARN)|    $(ERROR)ERROR!     $(WARN)+$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	exit 0;\
+	fi ;\
+	echo -e "" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	echo -e "$(WARN)| Updating OS   +$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	sudo apt-get update -y > /dev/null ;\
+	if [ $$? = 0 ] ; then \
+	echo -e "$(WARN)|     $(OK)OK!       $(WARN)+$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	else \
+	echo -e "$(WARN)|    $(ERROR)ERROR!     $(WARN)+$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	exit 0;\
+	fi ;\
+	echo -e "" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	echo -e "$(WARN)| Upgrading OS  +$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	sudo apt-get upgrade -y > /dev/null ;\
+	if [ $$? = 0 ] ; then \
+	echo -e "$(WARN)|     $(OK)OK!       $(WARN)+$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	else \
+	echo -e "$(WARN)|    $(ERROR)ERROR!     $(WARN)+$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	exit 0;\
+	fi ;\
+	echo -e "" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	echo -e "$(WARN)|  rpi-update   +$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	sudo apt-get install rpi-update -y > /dev/null ;\
+	if [ $$? = 0 ] ; then \
+	echo -e "$(WARN)|     $(OK)OK!       $(WARN)+$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	else \
+	echo -e "$(WARN)|    $(ERROR)ERROR!     $(WARN)+$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	exit 0;\
+	fi ;\
+	echo -e "" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	echo -e "$(WARN)|  rpi-update   +$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	sudo rpi-update -y > /dev/null ;\
+	if [ $$? = 0 ] ; then \
+	echo -e "$(WARN)|     $(OK)OK!       $(WARN)+$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	else \
+	echo -e "$(WARN)|    $(ERROR)ERROR!     $(WARN)+$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	exit 0;\
+	fi ;\
+	echo -e "" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	echo -e "$(WARN)| Hide Pi Logos +$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	sudo sed -i ' 1 s/.*/& logo.nologo/' /boot/cmdline.txt > /dev/null ;\
+	if [ $$? = 0 ] ; then \
+	echo -e "$(WARN)|     $(OK)OK!       $(WARN)+$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	else \
+	echo -e "$(WARN)|    $(ERROR)ERROR!     $(WARN)+$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	exit 0;\
+	fi ;\
+	echo -e "" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+	echo -e "$(WARN)| Hide Pi Logos +$(NO)" ;\
+	echo -e "$(WARN)+===============+$(NO)" ;\
+
+steve:
+	echo -e "" ;\
+	echo -e "$(WARN)+===================+$(NO)" ;\
+	echo -e "$(WARN)| Installing zyGrib +$(NO)" ;\
+	echo -e "$(WARN)+===================+$(NO)" ;\
+	if [ $$? = 0 ] ; then \
+	echo -e "$(WARN)|       $(OK)OK!       $(WARN)+$(NO)" ;\
+	echo -e "$(WARN)+=================+$(NO)" ;\
+	else \
+	echo -e "$(WARN)|      $(ERROR)ERROR!     $(WARN)+$(NO)" ;\
+	echo -e "$(WARN)+=================+$(NO)" ;\
+	exit 0;\
+	fi ;\
 
