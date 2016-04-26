@@ -7,21 +7,21 @@
 SHELL     := /bin/bash
 .PHONY: all clean prep display opencpn gpsd pisnes piready
 ################################################################
-## Name list
+## Names
 ################################################################
 USER     = capn
 HOME     = /home/$(USER)/
 INSTALL  = $(HOME)install/
 OCS      = $(HOME)OnboardComputerSystem/
 ################################################################
-## Colordefinition
+## Colors
 ################################################################
 NO       = \x1b[0m
 OK       = \x1b[32;01m
 WARN     = \x1b[33;01m
 ERROR    = \x1b[31;01m
 ################################################################
-## make help
+## Help
 ################################################################
 help:
 	@echo
@@ -497,20 +497,28 @@ opencpn:
 	echo -e "$(WARN)|   Install OpenCPN    +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	mkdir -p charts > /dev/null ;\
-	cp -r $(OCS).opencpn $(HOME) > /dev/null ;\
-	sed -i -e "s,laserwolf,$(USER),g" $(HOME).opencpn/plugins/watchdog/WatchdogConfiguration.xml > /dev/null ;\
-	sudo apt-get install build-essential cmake gettext git-core gpsd gpsd-clients libgps-dev wx-common libwxgtk3.0-dev libglu1-mesa-dev libgtk2.0-dev wx3.0-headers libbz2-dev libtinyxml-dev libportaudio2 portaudio19-dev libcurl4-openssl-dev libexpat1-dev libcairo2-dev -y > /dev/null ;\
+	cp -r $(OCS).opencpn $(HOME) ;\
+	sed -i -e "s,laserwolf,$(USER),g" $(HOME).opencpn/plugins/watchdog/WatchdogConfiguration.xml ;\
+	sudo apt-get install build-essential cmake gettext git-core gpsd gpsd-clients libgps-dev wx-common libwxgtk3.0-dev libglu1-mesa-dev libgtk2.0-dev wx3.0-headers libbz2-dev libtinyxml-dev libportaudio2 portaudio19-dev libcurl4-openssl-dev libexpat1-dev libcairo2-dev -y ;\
 	git clone git://github.com/OpenCPN/OpenCPN.git &> /dev/null ;\
 	echo -e "$(WARN)| This Takes 1-2 Hours +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
-	cd OpenCPN && mkdir build && cd build && cmake ../ && make && sudo make install > /dev/null ;\
-	cd > /dev/null ;\
-	rm -rf ~/OpenCPN/ > /dev/null ;\
-	working
+	cd OpenCPN && mkdir build && cd build && cmake ../ && make && sudo make install ;\
+	cd ;\
+	rm -rf OpenCPN ;\
 	if [ $$? = 0 ] ; then \
+	echo -e "" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
+	echo -e "$(WARN)|   Install OpenCPN    +$(NO)" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|         $(OK)OK!          $(WARN)+$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	else \
+	echo -e "" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
+	echo -e "$(WARN)|   Install OpenCPN    +$(NO)" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|        $(ERROR)ERROR!        $(WARN)+$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
@@ -521,13 +529,22 @@ opencpn:
 	echo -e "$(WARN)|  OpenCPN: Watchdog   +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	git clone git://github.com/seandepagnier/watchdog_pi.git &> /dev/null ;\
-	cd watchdog_pi && mkdir build && cd build && cmake ../ && make && sudo make install > /dev/null ;\
-	cd > /dev/null ;\
-	rm -rf ~/watchdog_pi/ > /dev/null ;\
+	cd watchdog_pi && mkdir -p build && cd build && cmake ../ && make && sudo make install ;\
+	cd ;\
+	rm -rf watchdog_pi ;\
 	if [ $$? = 0 ] ; then \
+	echo -e "" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
+	echo -e "$(WARN)|  OpenCPN: Watchdog   +$(NO)" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|         $(OK)OK!          $(WARN)+$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	else \
+	echo -e "" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
+	echo -e "$(WARN)|  OpenCPN: Watchdog   +$(NO)" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|        $(ERROR)ERROR!        $(WARN)+$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
@@ -538,15 +555,24 @@ opencpn:
 	echo -e "$(WARN)| OpenCPN: Climatology +$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	git clone git://github.com/seandepagnier/climatology_pi.git &> /dev/null ;\
-	cd climatology_pi && mkdir build && cd build && cmake ../ && make && sudo make install > /dev/null ;\
-	cd > /dev/null ;\
-	rm -rf ~/climatology_pi/ > /dev/null ;\
-	sudo mkdir /usr/local/share/opencpn/plugins/climatology_pi > /dev/null ;\
-	sudo tar -C /usr/local/share/opencpn/plugins/climatology_pi -xvf OnboardComputerSystem/CL-DATA-1.0.tar.xz > /dev/null ;\
+	cd climatology_pi && mkdir -p build && cd build && cmake ../ && make && sudo make install ;\
+	cd ;\
+	rm -rf climatology_pi &> /dev/null ;\
+	sudo mkdir -p /usr/local/share/opencpn/plugins/climatology_pi ;\
+	sudo tar -C /usr/local/share/opencpn/plugins/climatology_pi -xvf OnboardComputerSystem/CL-DATA-1.0.tar.xz ;\
 	if [ $$? = 0 ] ; then \
+	echo -e "" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
+	echo -e "$(WARN)| OpenCPN: Climatology +$(NO)" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|         $(OK)OK!          $(WARN)+$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	else \
+	echo -e "" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
+	echo -e "$(WARN)| OpenCPN: Climatology +$(NO)" ;\
+	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
 	echo -e "$(WARN)|        $(ERROR)ERROR!        $(WARN)+$(NO)" ;\
 	echo -e "$(WARN)+======================+$(NO)" ;\
