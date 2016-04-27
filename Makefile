@@ -61,6 +61,8 @@ prep:
 	sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio,pi $(USER) > /dev/null; \
 	git clone https://github.com/LASER-WOLF/OnboardComputerSystem &> /dev/null; \
 	cp -r $(OCS).OnboardComputerSystem $(HOME) > /dev/null; \
+	sed -i -e "s,Apps,apps,g" $(HOME).OnboardComputerSystem/OnboardComputerSystem; \
+	sed -i -e "s,Databases,databases,g" $(HOME).OnboardComputerSystem/OnboardComputerSystem.py; \
 	cp $(OCS).bash_aliases $(HOME) > /dev/null; \
 	mkdir -p $(HOME)apps $(HOME)camera $(HOME)documents $(HOME)databases $(HOME).config > /dev/null; \
 	cp -r $(OCS)Scripts/* $(HOME)scripts > /dev/null; \
