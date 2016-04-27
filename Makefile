@@ -27,6 +27,7 @@ help:
 	@echo
 	@echo -e "$(WARN)The following definitions provided by this Makefile"
 	@echo -e "$(OK)\tmake piready\t\t--\tready your pi"
+	@echo -e "$(IP)\tyour IP"
 	@echo -e "\tmake prep\t\t--\tOCS prep"
 	@echo -e "\tmake display\t\t--\tOCS display"
 	@echo -e "\tmake opencpn\t\t--\tOCS OpenCPN"
@@ -258,6 +259,16 @@ cmus:
 	cd; \
 	rm -rf $(HOME)cmusfm; \
 	cmusfm init
+	$(call app_out, $$?)
+
+plex:
+	$(call app_in,"Install PLEX"); \
+	sudo apt-get install apt-transport-https -y > /dev/null; \
+	wget -O - https://dev2day.de/pms/dev2day-pms.gpg.key | sudo apt-key add -; \
+	echo "deb https://dev2day.de/pms/ jessie main" | sudo tee /etc/apt/sources.list.d/pms.list; \
+	sudo apt-get update -y > /dev/null; \
+	sudo apt-get install plexmediaserver -y > /dev/null; \
+	echo -e "\n$(WARN)[] Access Plex on your Raspberry Pi\n[] http://ip.address:32400/web or\n[] http://ip.address:32400/manage/index.html#!/setup\n[] Replace ip.address with your actual local IP.$(NO)"; \
 	$(call app_out, $$?)
 
 pisnes:
