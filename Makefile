@@ -26,17 +26,19 @@ ERROR    = \x1b[31;01m
 help:
 	@echo
 	@echo -e "$(WARN)The following definitions provided by this Makefile"
-	@echo -e "$(OK)\tmake piready\t\t--\tready your pi"
-	@echo -e "$(IP)\tyour IP"
-	@echo -e "\tmake prep\t\t--\tOCS prep"
-	@echo -e "\tmake display\t\t--\tOCS display"
-	@echo -e "\tmake opencpn\t\t--\tOCS OpenCPN"
-	@echo -e "\tmake gpsd\t\t--\tOCS gpsd"
-	@echo -e "\tmake zygrib\t\t--\tOCS zyGrib"
-	@echo -e "\tmake all\t\t--\tprep display gpsd zyGrib OpenCPN"
+	@echo -e "$(OK)\tmake piready\t--\tready your pi"
+	@echo -e "\tmake prep\t--\tOCS System Prep"
+	@echo -e "\tmake display\t--\tOCS Display Settings"
+	@echo -e "\tmake opencpn\t--\tOCS OpenCPN"
+	@echo -e "\tmake gpsd\t--\tOCS gpsd"
+	@echo -e "\tmake zygrib\t--\tOCS zyGrib"
+	@echo -e "\tmake cmus\t--\tConsole Music Player"
+	@echo -e "\tmake pisnes\t--\tPi SNES Emulator"
+	@echo -e "\tmake plex\t--\tPlex Media Server"
+	@echo -e "\tmake all\t--\tprep display OpenCPN gpsd zyGrib cmus PiSNES"
 	@echo
 ################################################################
-## Definitions
+## Functions
 ################################################################
 define app_in
   echo "";
@@ -55,8 +57,7 @@ endef
 ################################################################
 ## Recipes
 ################################################################
-all: prep display gpsd zygrib opencpn
-
+all: prep display opencpn gpsd zygrib cmus pisnes
 prep:
 	$(call app_in,"Get OnboardComputerSystem"); \
 	sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio,pi $(USER) > /dev/null; \
@@ -178,10 +179,34 @@ prep:
 	mkdir -p $(HOME).kde/share/config > /dev/null; \
 	cp $(OCS).kde/share/config/okularrc $(HOME).kde/share/config/okularrc > /dev/null; \
 	cp $(OCS).kde/share/config/okularpartrc $(HOME).kde/share/config/okularpartrc > /dev/null; \
+	$(call app_out, $$?)
 	sudo apt-get install okular -y > /dev/null; \
+	$(call app_in,"Install FoxtrotGPS"); \
+	mkdir -p $(HOME).gconf/apps/foxtrotgps; \
+	sudo apt-get install foxtrotgps -y > /dev/null; \
+	cp $(OCS).gconf/apps/foxtrotgps/%gconf.xml $(HOME).gconf/apps/foxtrotgps/%gconf.xml; \
+	sed -i -e "s,laserwolf,$(USER),g" $(HOME).gconf/apps/foxtrotgps/%gconf.xml; \
+	$(call app_out, $$?)
 	echo -e ""; \
 	echo -e "$(OK)[] Reboot!$(NO)"
-
+display:
+	$(call app_in,"Setup xorg"); \
+	sudo apt-get install xorg -y > /dev/null; \
+	$(call app_out, $$?)
+	$(call app_in,"Setup openbox"); \
+	cp -r $(OCS).config/openbox $(HOME).config/openbox > /dev/null; \
+	cp $(OCS).config/user-dirs.dirs $(HOME).config > /dev/null; \
+	sudo cp $(OCS)xorg.conf /etc/X11/ > /dev/null; \
+	sed -i -e "s,laserwolf,$(USER),g" $(HOME).config/openbox/autostart > /dev/null; \
+	sudo apt-get install openbox -y > /dev/null; \
+	$(call app_out, $$?)
+	$(call app_in,"Setup LightDM"); \
+	sudo apt-get install lightdm -y > /dev/null; \
+	sudo cp $(INSTALL)lightdm.conf /etc/lightdm/lightdm.conf > /dev/null; \
+	sudo sed -i -e "s,laserwolf,$(USER),g" /etc/lightdm/lightdm.conf > /dev/null; \
+	sudo cp $(INSTALL)bootconfig.txt /boot/config.txt > /dev/null; \
+	sudo systemctl enable lightdm.service > /dev/null; \
+	$(call app_out, $$?)
 opencpn:
 	$(call app_in,"Install OpenCPN"); \
 	mkdir -p charts > /dev/null; \
@@ -209,32 +234,11 @@ opencpn:
 	sudo mkdir -p /usr/local/share/opencpn/plugins/climatology_pi; \
 	sudo tar -C /usr/local/share/opencpn/plugins/climatology_pi -xvf OnboardComputerSystem/CL-DATA-1.0.tar.xz; \
 	$(call app_out, $$?)
-
-display:
-	$(call app_in,"Setup xorg"); \
-	sudo apt-get install xorg -y > /dev/null; \
-	$(call app_out, $$?)
-	$(call app_in,"Setup openbox"); \
-	cp -r $(OCS).config/openbox $(HOME).config/openbox > /dev/null; \
-	cp $(OCS).config/user-dirs.dirs $(HOME).config > /dev/null; \
-	sudo cp $(OCS)xorg.conf /etc/X11/ > /dev/null; \
-	sed -i -e "s,laserwolf,$(USER),g" $(HOME).config/openbox/autostart > /dev/null; \
-	sudo apt-get install openbox -y > /dev/null; \
-	$(call app_out, $$?)
-	$(call app_in,"Setup LightDM"); \
-	sudo apt-get install lightdm -y > /dev/null; \
-	sudo cp $(INSTALL)lightdm.conf /etc/lightdm/lightdm.conf > /dev/null; \
-	sudo sed -i -e "s,laserwolf,$(USER),g" /etc/lightdm/lightdm.conf > /dev/null; \
-	sudo cp $(INSTALL)bootconfig.txt /boot/config.txt > /dev/null; \
-	sudo systemctl enable lightdm.service > /dev/null; \
-	$(call app_out, $$?)
-
 gpsd:
 	$(call app_in,"Install gpsd"); \
 	sudo apt-get install gpsd gpsd-clients -y > /dev/null; \
 	sudo cp $(OCS)gpsd /etc/default/gpsd > /dev/null; \
 	$(call app_out, $$?)
-
 zygrib:
 	$(call app_in,"Install zyGrib"); \
 	mkdir -p $(HOME)GRIB > /dev/null; \
@@ -247,7 +251,6 @@ zygrib:
 	cp $(OCS)zygrib.ini $(HOME).zygrib/config/ > /dev/null; \
 	sed -i -e "s,laserwolf,$(USER),g" $(HOME).zygrib/config/zygrib.ini > /dev/null; \
 	$(call app_out, $$?)
-
 cmus:
 	$(call app_in,"Install cmus"); \
 	mkdir -p music; \
@@ -260,7 +263,6 @@ cmus:
 	rm -rf $(HOME)cmusfm; \
 	cmusfm init
 	$(call app_out, $$?)
-
 plex:
 	$(call app_in,"Install PLEX"); \
 	sudo apt-get install apt-transport-https -y > /dev/null; \
@@ -270,22 +272,12 @@ plex:
 	sudo apt-get install plexmediaserver -y > /dev/null; \
 	echo -e "\n$(WARN)[] Access Plex on your Raspberry Pi\n[] http://ip.address:32400/web or\n[] http://ip.address:32400/manage/index.html#!/setup\n[] Replace ip.address with your actual local IP.$(NO)"; \
 	$(call app_out, $$?)
-
 pisnes:
 	$(call app_in,"Install PiSNES"); \
 	sudo apt-get install libsdl1.2debian joystick -y > /dev/null; \
 	cp -r $(OCS)Apps/pisnes apps; \
 	mkdir -p $(HOME)apps/pisnes/roms; \
 	$(call app_out, $$?)
-
-foxtrot:
-	$(call app_in,"Install FoxtrotGPS"); \
-	mkdir -p $(HOME).gconf/apps/foxtrotgps; \
-	sudo apt-get install foxtrotgps -y > /dev/null; \
-	cp $(OCS).gconf/apps/foxtrotgps/%gconf.xml $(HOME).gconf/apps/foxtrotgps/%gconf.xml; \
-	sed -i -e "s,laserwolf,$(USER),g" $(HOME).gconf/apps/foxtrotgps/%gconf.xml; \
-	$(call app_out, $$?)
-
 piready:
 	$(call app_in,"Getting git"); \
 	sudo apt-get install build-essential git -y > /dev/null; \
@@ -308,3 +300,6 @@ piready:
 	echo -e ""; \
 	echo -e "$(OK)[] Reboot!$(NO)"
 
+################################################################
+## OCSinstall https://github.com/steveshannon/OCSinstall
+################################################################
