@@ -23,8 +23,8 @@ Log in as pi:raspberry
 Log in with user account
  - Remove pi user from sudoers
  - Remove the pi user account
-
-Are you in your user home directory? Good.
+ - sudo apt-get update && sudo apt-get upgrade
+ - sudo apt-get install build-essential git
 
 **git clone https://github.com/steveshannon/OCSinstall**
 
