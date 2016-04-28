@@ -60,19 +60,24 @@ endef
 all: prep display opencpn gpsd zygrib cmus pisnes
 prep:
 	$(call app_in,"Get OnboardComputerSystem"); \
-	sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio,pi $(USER) > /dev/null; \
+	sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio $(USER) > /dev/null; \
 	git clone https://github.com/LASER-WOLF/OnboardComputerSystem &> /dev/null; \
 	cp -r $(OCS).OnboardComputerSystem $(HOME) > /dev/null; \
-	sed -i -e "s,Apps,apps,g" $(HOME).OnboardComputerSystem/OnboardComputerSystem; \
-	sed -i -e "s,Databases,databases,g" $(HOME).OnboardComputerSystem/OnboardComputerSystem.py; \
+	sed -i -e "s/Apps/apps/g" $(HOME).OnboardComputerSystem/OnboardComputerSystem; \
+	sed -i -e "s/Databases/databases/g" $(HOME).OnboardComputerSystem/OnboardComputerSystem.py; \
 	cp $(OCS).bash_aliases $(HOME) > /dev/null; \
-	mkdir -p $(HOME)apps $(HOME)camera $(HOME)documents $(HOME)databases $(HOME).config > /dev/null; \
+	mkdir -p $(HOME)apps $(HOME)camera $(HOME)documents $(HOME)databases $(HOME).config $(HOME)scripts > /dev/null; \
 	cp -r $(OCS)Scripts/* $(HOME)scripts > /dev/null; \
+	cp -r $(OCS).fonts $(HOME).fonts; \
+	cp -r $(OCS).themes $(HOME).themes; \
+	cp -r $(OCS).icons $(HOME).icons; \
+	cp $(OCS).gtkrc-2.0 $(HOME).gtkrc-2.0; \
+	cp -r $(OCS).config/gtk-3.0 $(HOME).config/gtk-3.0; \
 	$(call app_out, $$?)
 	$(call app_in,"Install rxvt"); \
 	sudo apt-get install rxvt-unicode -y > /dev/null; \
 	cp $(OCS)/.Xresources $(HOME) > /dev/null; \
-	sed -i -e "s,laserwolf,$(USER),g" $(HOME).Xresources > /dev/null; \
+	sed -i -e "s/laserwolf/$(USER)/g" $(HOME).Xresources; \
 	$(call app_out, $$?)
 	$(call app_in,"Install Florence"); \
 	cp $(OCS).florence.conf $(HOME) > /dev/null; \
@@ -104,20 +109,13 @@ prep:
 	git clone https://github.com/krypt-n/bar &> /dev/null; \
 	cd bar && sudo make install > /dev/null; \
 	cd; \
-	sudo rm -rf ~/bar/ > /dev/null; \
+	sudo rm -rf $(HOME)bar/ > /dev/null; \
 	$(call app_out, $$?)
 	$(call app_in,"Get conky"); \
-	sudo apt-get install conky -y > /dev/null; \
-	cp OnboardComputerSystem/.conkyrc $(HOME) > /dev/null; \
-	sed -i -e "s,laserwolf,$(USER),g" $(HOME).conkyrc > /dev/null; \
-	touch $(HOME).conkytext > /dev/null; \
-	$(call app_out, $$?)
-	$(call app_in,"Installing Fonts, Themes, Icons"); \
-	cp -r $(OCS).fonts $(HOME).fonts > /dev/null; \
-	cp -r $(OCS).themes $(HOME).themes > /dev/null; \
-	cp -r $(OCS).icons $(HOME).icons > /dev/null; \
-	cp $(OCS).gtkrc-2.0 $(HOME).gtkrc-2.0 > /dev/null; \
-	cp -r $(OCS).config/gtk-3.0 $(HOME).config/gtk-3.0 > /dev/null; \
+	sudo apt-get install conky -y; \
+	cp $(OCS).conkyrc $(HOME); \
+	sed -i -e "s/laserwolf/$(USER)/g" $(HOME).conkyrc; \
+	touch $(HOME).conkytext; \
 	$(call app_out, $$?)
 	$(call app_in,"Setup I2C"); \
 	sudo apt-get install i2c-tools -y > /dev/null; \
@@ -139,7 +137,7 @@ prep:
 	sudo rm -rf $(HOME)Adafruit_Python_BMP/ > /dev/null; \
 	$(call app_out, $$?)
 	$(call app_in,"Syncing NTP"); \
-	sudo sed -i -e "s,=ntp,=root,g" /etc/init.d/ntp > /dev/null; \
+	sudo sed -i -e "s/=ntp/=root/g" /etc/init.d/ntp > /dev/null; \
 	sudo sed -i -e "/server 3/aserver 127.127.28.0\nfudge 127.127.28.0 refid GPS\nserver 127.127.28.1 prefer\nfudge 127.127.28.1 refid PPS" /etc/ntp.conf > /dev/null; \
 	$(call app_out, $$?)
 	$(call app_in,"Install kplex"); \
@@ -185,7 +183,7 @@ prep:
 	mkdir -p $(HOME).gconf/apps/foxtrotgps; \
 	sudo apt-get install foxtrotgps -y > /dev/null; \
 	cp $(OCS).gconf/apps/foxtrotgps/%gconf.xml $(HOME).gconf/apps/foxtrotgps/%gconf.xml; \
-	sed -i -e "s,laserwolf,$(USER),g" $(HOME).gconf/apps/foxtrotgps/%gconf.xml; \
+	sed -i -e "s/laserwolf/$(USER)/g" $(HOME).gconf/apps/foxtrotgps/%gconf.xml; \
 	$(call app_out, $$?)
 	echo -e ""; \
 	echo -e "$(OK)[] Reboot!$(NO)"
@@ -197,13 +195,13 @@ display:
 	cp -r $(OCS).config/openbox $(HOME).config/openbox > /dev/null; \
 	cp $(OCS).config/user-dirs.dirs $(HOME).config > /dev/null; \
 	sudo cp $(OCS)xorg.conf /etc/X11/ > /dev/null; \
-	sed -i -e "s,laserwolf,$(USER),g" $(HOME).config/openbox/autostart > /dev/null; \
+	sed -i -e "s/laserwolf/$(USER)/g" $(HOME).config/openbox/autostart > /dev/null; \
 	sudo apt-get install openbox -y > /dev/null; \
 	$(call app_out, $$?)
 	$(call app_in,"Setup LightDM"); \
 	sudo apt-get install lightdm -y > /dev/null; \
 	sudo cp $(INSTALL)lightdm.conf /etc/lightdm/lightdm.conf > /dev/null; \
-	sudo sed -i -e "s,laserwolf,$(USER),g" /etc/lightdm/lightdm.conf > /dev/null; \
+	sudo sed -i -e "s/laserwolf/$(USER)/g" /etc/lightdm/lightdm.conf > /dev/null; \
 	sudo cp $(INSTALL)bootconfig.txt /boot/config.txt > /dev/null; \
 	sudo systemctl enable lightdm.service > /dev/null; \
 	$(call app_out, $$?)
@@ -211,7 +209,7 @@ opencpn:
 	$(call app_in,"Install OpenCPN"); \
 	mkdir -p charts > /dev/null; \
 	cp -r $(OCS).opencpn $(HOME); \
-	sed -i -e "s,laserwolf,$(USER),g" $(HOME).opencpn/plugins/watchdog/WatchdogConfiguration.xml; \
+	sed -i -e "s/laserwolf/$(USER)/g" $(HOME).opencpn/plugins/watchdog/WatchdogConfiguration.xml; \
 	sudo apt-get install build-essential cmake gettext git-core gpsd gpsd-clients libgps-dev wx-common libwxgtk3.0-dev libglu1-mesa-dev libgtk2.0-dev wx3.0-headers libbz2-dev libtinyxml-dev libportaudio2 portaudio19-dev libcurl4-openssl-dev libexpat1-dev libcairo2-dev -y; \
 	git clone git://github.com/OpenCPN/OpenCPN.git &> /dev/null; \
 	echo -e "$(WARN)| This Takes 1-2 Hours +$(NO)"; \
@@ -244,12 +242,12 @@ zygrib:
 	mkdir -p $(HOME)GRIB > /dev/null; \
 	sudo apt-get install build-essential g++ make libqt4-dev libbz2-dev zlib1g-dev libproj-dev libnova-dev nettle-dev -y > /dev/null; \
 	tar xvzf $(OCS)zyGrib-7.0.0.tgz > /dev/null; \
-	cd zyGrib-7.0.0 && make && sed -i -e 's,$$(HOME),$(HOME)apps,g' $(HOME)zyGrib-7.0.0/Makefile && sudo make install > /dev/null; \
+	cd zyGrib-7.0.0 && make && sed -i -e 's/$$(HOME)/$(HOME)apps/g' $(HOME)zyGrib-7.0.0/Makefile && sudo make install > /dev/null; \
 	cd; \
 	rm -rf $(HOME)zyGrib-7.0.0 > /dev/null; \
 	mkdir -p $(HOME).zygrib/config/ > /dev/null; \
 	cp $(OCS)zygrib.ini $(HOME).zygrib/config/ > /dev/null; \
-	sed -i -e "s,laserwolf,$(USER),g" $(HOME).zygrib/config/zygrib.ini > /dev/null; \
+	sed -i -e "s/laserwolf/$(USER)/g" $(HOME).zygrib/config/zygrib.ini > /dev/null; \
 	$(call app_out, $$?)
 cmus:
 	$(call app_in,"Install cmus"); \
@@ -299,7 +297,6 @@ piready:
 	$(call app_out, $$?); \
 	echo -e ""; \
 	echo -e "$(OK)[] Reboot!$(NO)"
-
 ################################################################
 ## OCSinstall https://github.com/steveshannon/OCSinstall
 ################################################################
