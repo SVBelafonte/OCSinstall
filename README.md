@@ -28,23 +28,14 @@ Log in with user account
 
 **git clone https://github.com/steveshannon/OCSinstall**
 
-mv OCSinstall/* .
+ln -s ~/OCSinstall/Makefile Makefile && ln -s ~/OCSinstall/install install
 
-**ls -la**
-
-you should see:
-```sh
-$ ls -la
-install
-Makefile
-README.md
-```
 **vi Makefile**
  - Find USER=capn and change capn to your user account name
  - Save and quit
 
 **make piready**
- - Installs git, updates OS, upgrades OS, rpi-update, hide pi logos
+ - Updates and upgrades OS, rpi-update, hides Pi logo
  - Reboot
 
 **make prep**

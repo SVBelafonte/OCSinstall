@@ -185,7 +185,7 @@ prep:
 	cp $(OCS).gconf/apps/foxtrotgps/%gconf.xml $(HOME).gconf/apps/foxtrotgps/%gconf.xml; \
 	sed -i -e "s/laserwolf/$(USER)/g" $(HOME).gconf/apps/foxtrotgps/%gconf.xml; \
 	$(call app_out, $$?)
-	echo -e ""; \
+	echo -e ""
 display:
 	$(call app_in,"Setup xorg"); \
 	sudo apt-get install xorg -y > /dev/null; \
@@ -198,10 +198,10 @@ display:
 	sudo apt-get install openbox -y > /dev/null; \
 	$(call app_out, $$?)
 	$(call app_in,"Setup LightDM"); \
-	sudo apt-get install lightdm -y > /dev/null; \
-	sudo cp $(INSTALL)lightdm.conf /etc/lightdm/lightdm.conf > /dev/null; \
-	sudo sed -i -e "s/laserwolf/$(USER)/g" /etc/lightdm/lightdm.conf > /dev/null; \
-	sudo cp $(INSTALL)bootconfig.txt /boot/config.txt > /dev/null; \
+	sudo apt-get install lightdm > /dev/null; \
+	sudo cp $(INSTALL)lightdm.conf /etc/lightdm/lightdm.conf; \
+	sudo sed -i -e "s/laserwolf/$(USER)/g" /etc/lightdm/lightdm.conf; \
+	sudo cp $(INSTALL)bootconfig.txt /boot/config.txt; \
 	sudo systemctl enable lightdm.service > /dev/null; \
 	$(call app_out, $$?)
 opencpn:
@@ -258,8 +258,8 @@ cmus:
 	cd cmusfm && autoreconf --install && mkdir -p build && cd build && ../configure && make && sudo make install > /dev/null; \
 	cd; \
 	rm -rf $(HOME)cmusfm; \
-	echo -e "$(WARN)[] cmusfm api may hang - press return$(NO)"
-	cmusfm init
+	echo -e "$(WARN)[] cmusfm api may hang - press return$(NO)"; \
+	cmusfm init; \
 	$(call app_out, $$?)
 plex:
 	$(call app_in,"Install PLEX"); \
@@ -277,9 +277,6 @@ pisnes:
 	mkdir -p $(HOME)apps/pisnes/roms; \
 	$(call app_out, $$?)
 piready:
-	$(call app_in,"Getting git"); \
-	sudo apt-get install build-essential git -y > /dev/null; \
-	$(call app_out, $$?); \
 	$(call app_in,"Update OS"); \
 	sudo apt-get update -y > /dev/null; \
 	$(call app_out, $$?); \
