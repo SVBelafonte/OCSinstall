@@ -57,7 +57,7 @@ endef
 ################################################################
 ## Recipes
 ################################################################
-all: prep display opencpn gpsd zygrib cmus pisnes
+all: prep display opencpn gpsd zygrib pisnes cmus
 prep:
 	$(call app_in,"Get OnboardComputerSystem"); \
 	sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio $(USER) > /dev/null; \
@@ -186,7 +186,6 @@ prep:
 	sed -i -e "s/laserwolf/$(USER)/g" $(HOME).gconf/apps/foxtrotgps/%gconf.xml; \
 	$(call app_out, $$?)
 	echo -e ""; \
-	echo -e "$(OK)[] Reboot!$(NO)"
 display:
 	$(call app_in,"Setup xorg"); \
 	sudo apt-get install xorg -y > /dev/null; \
@@ -259,6 +258,7 @@ cmus:
 	cd cmusfm && autoreconf --install && mkdir -p build && cd build && ../configure && make && sudo make install > /dev/null; \
 	cd; \
 	rm -rf $(HOME)cmusfm; \
+	echo -e "$(WARN)[] cmusfm api may hang - press return$(NO)"
 	cmusfm init
 	$(call app_out, $$?)
 plex:
