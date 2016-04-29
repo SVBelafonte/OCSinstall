@@ -73,6 +73,15 @@ prep:
 	cp -r $(OCS).icons $(HOME).icons; \
 	cp $(OCS).gtkrc-2.0 $(HOME).gtkrc-2.0; \
 	cp -r $(OCS).config/gtk-3.0 $(HOME).config/gtk-3.0; \
+	sed -i -e 's#/Charts#/charts#g' $(HOME)scripts/backup.sh; \
+	sed -i -e 's#/Documents#/documents#g' $(HOME)scripts/backup.sh; \
+	sed -i -e 's#/Music#/music#g' $(HOME)scripts/backup.sh; \
+	sed -i -e 's#/Camera#/camera#g' $(HOME)scripts/update-server.sh; \
+	sed -i -e 's#/Databases#/databases#g' $(HOME)scripts/update-server.sh; \
+	sed -i -e 's#/Camera#/camera#g' $(HOME)scripts/webcam.sh; \
+	sed -i -e 's#/Databases#/databases#g' $(HOME).OnboardComputerSystem/info.py; \
+	sed -i -e 's#/Databases#/databases#g' $(HOME).OnboardComputerSystem/weather-history-curses.py; \
+	sed -i -e 's#/Databases#/databases#g' $(HOME).OnboardComputerSystem/location-history-curses.py; \
 	$(call app_out, $$?)
 	$(call app_in,"Install rxvt"); \
 	sudo apt-get install rxvt-unicode -y > /dev/null; \
@@ -209,6 +218,8 @@ opencpn:
 	mkdir -p charts > /dev/null; \
 	cp -r $(OCS).opencpn $(HOME); \
 	sed -i -e "s/laserwolf/$(USER)/g" $(HOME).opencpn/plugins/watchdog/WatchdogConfiguration.xml; \
+	sed -i -e 's#/Apps#/apps#g' .config/openbox/menu.xml; \
+	sed -e 's#/Scripts#/scripts#g' .config/openbox/menu.xml; \
 	sudo apt-get install build-essential cmake gettext git-core gpsd gpsd-clients libgps-dev wx-common libwxgtk3.0-dev libglu1-mesa-dev libgtk2.0-dev wx3.0-headers libbz2-dev libtinyxml-dev libportaudio2 portaudio19-dev libcurl4-openssl-dev libexpat1-dev libcairo2-dev -y; \
 	git clone git://github.com/OpenCPN/OpenCPN.git &> /dev/null; \
 	echo -e "$(WARN)| This Takes 1-2 Hours +$(NO)"; \
@@ -258,8 +269,6 @@ cmus:
 	cd cmusfm && autoreconf --install && mkdir -p build && cd build && ../configure && make && sudo make install > /dev/null; \
 	cd; \
 	rm -rf $(HOME)cmusfm; \
-	echo -e "$(WARN)[] cmusfm api may hang - press return$(NO)"; \
-	cmusfm init; \
 	$(call app_out, $$?)
 plex:
 	$(call app_in,"Install PLEX"); \
