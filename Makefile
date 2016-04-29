@@ -58,6 +58,7 @@ endef
 ## Recipes
 ################################################################
 all: prep display opencpn gpsd zygrib pisnes cmus
+steve: prep display opencpn gpsd zygrib pisnes plex 
 prep:
 	$(call app_in,"Get OnboardComputerSystem"); \
 	sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio $(USER) > /dev/null; \
@@ -207,11 +208,11 @@ display:
 	sudo apt-get install openbox -y > /dev/null; \
 	$(call app_out, $$?)
 	$(call app_in,"Setup LightDM"); \
-	sudo apt-get install lightdm > /dev/null; \
+	sudo apt-get install lightdm -y; \
 	sudo cp $(INSTALL)lightdm.conf /etc/lightdm/lightdm.conf; \
 	sudo sed -i -e "s/laserwolf/$(USER)/g" /etc/lightdm/lightdm.conf; \
 	sudo cp $(INSTALL)bootconfig.txt /boot/config.txt; \
-	sudo systemctl enable lightdm.service > /dev/null; \
+	sudo systemctl enable lightdm.service; \
 	$(call app_out, $$?)
 opencpn:
 	$(call app_in,"Install OpenCPN"); \
