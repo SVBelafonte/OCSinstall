@@ -58,7 +58,7 @@ endef
 ## Recipes
 ################################################################
 all: prep display opencpn gpsd zygrib pisnes cmus
-steve: prep display opencpn gpsd zygrib pisnes plex 
+steve: prep display opencpn gpsd zygrib pisnes cmus plex 
 prep:
 	$(call app_in,"Get OnboardComputerSystem"); \
 	sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio $(USER) > /dev/null; \
@@ -253,12 +253,12 @@ zygrib:
 	mkdir -p $(HOME)GRIB > /dev/null; \
 	sudo apt-get install build-essential g++ make libqt4-dev libbz2-dev zlib1g-dev libproj-dev libnova-dev nettle-dev -y > /dev/null; \
 	tar xvzf $(OCS)zyGrib-7.0.0.tgz > /dev/null; \
-	cd zyGrib-7.0.0 && make && sed -i -e 's/$$(HOME)/$(HOME)apps/g' $(HOME)zyGrib-7.0.0/Makefile && sudo make install > /dev/null; \
+	cd zyGrib-7.0.0 && make  > /dev/null && sed -i -e "s/laserwolf/$(USER)/g" $(HOME)zyGrib-7.0.0/Makefile && sudo make install > /dev/null; \
 	cd; \
-	rm -rf $(HOME)zyGrib-7.0.0 > /dev/null; \
-	mkdir -p $(HOME).zygrib/config/ > /dev/null; \
-	cp $(OCS)zygrib.ini $(HOME).zygrib/config/ > /dev/null; \
-	sed -i -e "s/laserwolf/$(USER)/g" $(HOME).zygrib/config/zygrib.ini > /dev/null; \
+	rm -rf $(HOME)zyGrib-7.0.0; \
+	mkdir -p $(HOME).zygrib/config; \
+	cp $(OCS)zygrib.ini $(HOME).zygrib/config; \
+	sed -i -e "s/laserwolf/$(USER)/g" $(HOME).zygrib/config/zygrib.ini; \
 	$(call app_out, $$?)
 cmus:
 	$(call app_in,"Install cmus"); \
